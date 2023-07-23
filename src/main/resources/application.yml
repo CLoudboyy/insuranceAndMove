@@ -1,0 +1,19 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/hzy?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Hzy123456..
+
+mybatis-plus:
+  type-aliases-package: cn.edu.guet.insuranceandmove.bean
+  mapper-locations: classpath:mapper/*Mapper.xml
+
+#showSql
+logging:
+  level:
+    cn.edu.guet.insuranceandmove.mapper: DEBUG
+
