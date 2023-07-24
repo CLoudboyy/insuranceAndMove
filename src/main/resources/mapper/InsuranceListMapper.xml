@@ -5,40 +5,132 @@
 <mapper namespace="cn.edu.guet.insuranceandmove.mapper.InsuranceListMapper">
 
     <resultMap id="BaseResultMap" type="cn.edu.guet.insuranceandmove.bean.InsuranceList">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="prefecture" column="prefecture" jdbcType="INTEGER"/>
-            <result property="county" column="county" jdbcType="INTEGER"/>
-            <result property="caseName" column="case_name" jdbcType="VARCHAR"/>
-            <result property="caseOccurrenceTime" column="case_occurrence_time" jdbcType="TIMESTAMP"/>
-            <result property="networkHierarchy" column="network_hierarchy" jdbcType="INTEGER"/>
-            <result property="caseProgressSituation" column="case_progress_situation" jdbcType="INTEGER"/>
-            <result property="reportingReasonsType" column="reporting_reasons_ type" jdbcType="INTEGER"/>
-            <result property="caseReporter" column="case_reporter" jdbcType="VARCHAR"/>
-            <result property="maintenanceManager" column="maintenance_manager" jdbcType="VARCHAR"/>
-            <result property="estimatedLossAmount" column="estimated_loss_amount" jdbcType="DECIMAL"/>
-            <result property="compensationType" column="compensation_type" jdbcType="INTEGER"/>
-            <result property="caseCompletionConfirm" column="case_completion_confirm" jdbcType="INTEGER"/>
-            <result property="insuranceContentDescription" column="insurance_content_description" jdbcType="VARCHAR"/>
-            <result property="compensationReceivedAmount" column="compensation_received_amount" jdbcType="DECIMAL"/>
-            <result property="compensationReceivedTime" column="compensation_received_time" jdbcType="TIMESTAMP"/>
-            <result property="compensationSituationRemark" column="compensation_situation_remark" jdbcType="VARCHAR"/>
-            <result property="icLedgerRegistrationName" column="IC_ledger_registration_name" jdbcType="VARCHAR"/>
-            <result property="icInsuranceReportNo" column="IC_insurance_report_no" jdbcType="VARCHAR"/>
-            <result property="icEstimatedReparationAmount" column="IC_estimated_reparation_amount" jdbcType="DECIMAL"/>
-            <result property="compensationProgress" column="compensation_progress" jdbcType="INTEGER"/>
-            <result property="insuranceRemarks" column="insurance_remarks" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="prefecture" column="prefecture" jdbcType="INTEGER"/>
+        <result property="county" column="county" jdbcType="INTEGER"/>
+        <result property="caseName" column="case_name" jdbcType="VARCHAR"/>
+        <result property="caseOccurrenceTime" column="case_occurrence_time" jdbcType="TIMESTAMP"/>
+        <result property="networkHierarchy" column="network_hierarchy" jdbcType="INTEGER"/>
+        <result property="caseProgressSituation" column="case_progress_situation" jdbcType="INTEGER"/>
+        <result property="reportingReasonsType" column="reporting_reasons_type" jdbcType="INTEGER"/>
+        <result property="caseReporter" column="case_reporter" jdbcType="VARCHAR"/>
+        <result property="maintenanceManager" column="maintenance_manager" jdbcType="VARCHAR"/>
+        <result property="estimatedLossAmount" column="estimated_loss_amount" jdbcType="DECIMAL"/>
+        <result property="compensationType" column="compensation_type" jdbcType="INTEGER"/>
+        <result property="caseCompletionConfirm" column="case_completion_confirm" jdbcType="INTEGER"/>
+        <result property="insuranceContentDescription" column="insurance_content_description" jdbcType="VARCHAR"/>
+        <result property="compensationReceivedAmount" column="compensation_received_amount" jdbcType="DECIMAL"/>
+        <result property="compensationReceivedTime" column="compensation_received_time" jdbcType="TIMESTAMP"/>
+        <result property="compensationSituationRemark" column="compensation_situation_remark" jdbcType="VARCHAR"/>
+        <result property="icLedgerRegistrationName" column="IC_ledger_registration_name" jdbcType="VARCHAR"/>
+        <result property="icInsuranceReportNo" column="IC_insurance_report_no" jdbcType="VARCHAR"/>
+        <result property="icEstimatedReparationAmount" column="IC_estimated_reparation_amount" jdbcType="DECIMAL"/>
+        <result property="compensationProgress" column="compensation_progress" jdbcType="INTEGER"/>
+        <result property="insuranceRemarks" column="insurance_remarks" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,prefecture,county,
+        id
+        ,prefecture,county,
         case_name,case_occurrence_time,network_hierarchy,
-        case_progress_situation,reporting_reasons_ type,case_reporter,
+        case_progress_situation,reporting_reasons_type,case_reporter,
         maintenance_manager,estimated_loss_amount,compensation_type,
         case_completion_confirm,insurance_content_description,compensation_received_amount,
         compensation_received_time,compensation_situation_remark,IC_ledger_registration_name,
         IC_insurance_report_no,IC_estimated_reparation_amount,compensation_progress,
         insurance_remarks,create_time,update_time
     </sql>
+    <select id="selectInsurance" resultMap="BaseResultMap"
+            parameterType="cn.edu.guet.insuranceandmove.bean.InsuranceDTO">
+        SELECT * FROM t_insurance_list
+        <where>
+            <if test="prefecture!=0">
+                AND prefecture = #{prefecture}
+            </if>
+            <if test="county!=0">
+                AND county = #{county}
+            </if>
+            <if test="caseName!=null and caseName!=''">
+                AND case_name LIKE CONCAT('%', #{caseName}, '%')
+            </if>
+            <if test="caseOccurrenceTime!=null and caseOccurrenceTime.size() > 0">
+                AND (
+                <foreach collection="caseOccurrenceTime" index="index" item="item" open="" separator="or" close="">
+                    <choose>
+                        <when test="index == 0">
+                            case_occurrence_time BETWEEN #{item} AND #{caseOccurrenceTime[1]}
+                        </when>
+                        <otherwise>
+                            case_occurrence_time BETWEEN #{caseOccurrenceTime[0]} AND #{item}
+                        </otherwise>
+                    </choose>
+                </foreach>
+                )
+            </if>
+            <if test="networkHierarchy!=0">
+                AND network_hierarchy = #{networkHierarchy}
+            </if>
+            <if test="caseProgressSituation!=0">
+                AND case_progress_situation = #{caseProgressSituation}
+            </if>
+            <if test="reportingReasonsType!=0">
+                AND reporting_reasons_type = #{reportingReasonsType}
+            </if>
+            <if test="compensationType!=0">
+                AND compensation_type = #{compensationType}
+            </if>
+            <if test="compensationProgress!=0">
+                AND compensation_progress = #{compensationProgress}
+            </if>
+        </where>
+        <if test="current != null and size != null">
+            LIMIT #{current}, #{size}
+        </if>
+    </select>
+    <select id="selectTotalRow" resultType="java.lang.Integer" parameterType="cn.edu.guet.insuranceandmove.bean.InsuranceDTO">
+        SELECT COUNT(*) FROM t_insurance_list
+        <where>
+            <if test="prefecture!=0">
+                AND prefecture = #{prefecture}
+            </if>
+            <if test="county!=0">
+                AND county = #{county}
+            </if>
+            <if test="caseName!=null and caseName!=''">
+                AND case_name LIKE CONCAT('%', #{caseName}, '%')
+            </if>
+            <if test="caseOccurrenceTime!=null and caseOccurrenceTime.size() > 0">
+                AND (
+                <foreach collection="caseOccurrenceTime" index="index" item="item" open="" separator="or" close="">
+                    <choose>
+                        <when test="index == 0">
+                            case_occurrence_time BETWEEN #{item} AND #{caseOccurrenceTime[1]}
+                        </when>
+                        <otherwise>
+                            case_occurrence_time BETWEEN #{caseOccurrenceTime[0]} AND #{item}
+                        </otherwise>
+                    </choose>
+                </foreach>
+                )
+            </if>
+            <if test="networkHierarchy!=0">
+                AND network_hierarchy = #{networkHierarchy}
+            </if>
+            <if test="caseProgressSituation!=0">
+                AND case_progress_situation = #{caseProgressSituation}
+            </if>
+            <if test="reportingReasonsType!=0">
+                AND reporting_reasons_type = #{reportingReasonsType}
+            </if>
+            <if test="compensationType!=0">
+                AND compensation_type = #{compensationType}
+            </if>
+            <if test="compensationProgress!=0">
+                AND compensation_progress = #{compensationProgress}
+            </if>
+        </where>
+    </select>
+
 </mapper>

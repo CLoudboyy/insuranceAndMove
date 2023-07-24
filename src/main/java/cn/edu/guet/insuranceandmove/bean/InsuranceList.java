@@ -59,7 +59,7 @@ public class InsuranceList implements Serializable {
     /**
      * 保险报案原因分类
      */
-    @TableField(value = "reporting_reasons_ type")
+    @TableField(value = "reporting_reasons_type")
     private Integer reportingReasonsType;
 
     /**
