@@ -1,7 +1,11 @@
 package cn.edu.guet.insuranceandmove.service;
 
+import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
 import cn.edu.guet.insuranceandmove.bean.InsuranceList;
+import cn.edu.guet.insuranceandmove.bean.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author Cloud
@@ -9,5 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2023-07-23 15:18:03
 */
 public interface InsuranceListService extends IService<InsuranceList> {
-
+    Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO);
 }

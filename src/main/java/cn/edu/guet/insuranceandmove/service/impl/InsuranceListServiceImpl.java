@@ -1,10 +1,15 @@
 package cn.edu.guet.insuranceandmove.service.impl;
 
+import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
+import cn.edu.guet.insuranceandmove.bean.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.edu.guet.insuranceandmove.bean.InsuranceList;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
 import cn.edu.guet.insuranceandmove.mapper.InsuranceListMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author Cloud
@@ -15,6 +20,29 @@ import org.springframework.stereotype.Service;
 public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, InsuranceList>
     implements InsuranceListService{
 
+    @Autowired
+    private InsuranceListMapper insuranceListMapper;
+
+    @Override
+    public Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO) {
+        insuranceDTO.setCurrent(insuranceDTO.getCurrent()-1);
+        System.out.println(insuranceDTO.getCaseOccurrenceTime());
+        List<InsuranceList> insuranceList= insuranceListMapper.selectInsurance(insuranceDTO);
+        int totalRow = insuranceListMapper.selectTotalRow(insuranceDTO);
+        int pages = 0;
+        if (totalRow % insuranceDTO.getSize() == 0) {
+            pages = totalRow / insuranceDTO.getSize();
+        } else {
+            pages = totalRow / insuranceDTO.getSize() + 1;
+        }
+        Page<InsuranceList> paginations = new Page<>();
+        paginations.setTotal(totalRow);
+        paginations.setPages(pages);
+        paginations.setSize(insuranceDTO.getSize());
+        paginations.setCurrent(insuranceDTO.getCurrent());
+        paginations.setRecords(insuranceList);
+        return paginations;
+    }
 }
 
 
