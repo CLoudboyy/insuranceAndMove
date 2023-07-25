@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
 /**
  * @Author huangzhouyu
  * @Data 2023/7/23 15:23
@@ -27,6 +26,9 @@ public class InsuranceController {
     private InsuranceListService insuranceListService;
 
     /**
+
+     * 查询保险清单
+
      * 查询保险清单（带分页）
      * @param insuranceDTO
      * @return
@@ -36,4 +38,19 @@ public class InsuranceController {
         return ResponseData.ok(insuranceListService.selectInsuranceList(insuranceDTO));
     }
 
+
+    /**
+     * 删除保险清单
+     * @param idsList
+     * @return
+     */
+    @PostMapping("/deleteInsuranceByIds")
+    public ResponseData deleteInsuranceByIds(@RequestBody List<Long> idsList){
+        int deleteResult = insuranceListService.deleteInsuranceByIds(idsList);
+        if (deleteResult == 1){
+            return ResponseData.ok("删除成功");
+        }else {
+            return ResponseData.fail("删除失败");
+        }
+    }
 }

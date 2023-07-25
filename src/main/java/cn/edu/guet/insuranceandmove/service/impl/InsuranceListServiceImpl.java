@@ -25,8 +25,14 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
     @Autowired
     private InsuranceListMapper insuranceListMapper;
 
+    /**
+     * 查询保险清单
+     * @param insuranceDTO
+     * @return
+     */
     @Override
     public Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO) {
+
         insuranceDTO.setCurrent((insuranceDTO.getCurrent() - 1) * insuranceDTO.getSize());
         System.out.println(insuranceDTO.getCaseOccurrenceTime());
         List<InsuranceList> insuranceList = insuranceListMapper.selectInsurance(insuranceDTO);
@@ -46,6 +52,20 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         return paginations;
     }
 
+    /**
+     * 删除保险清单
+     * @param idsList
+     * @return
+     */
+    @Override
+    public int deleteInsuranceByIds(List<Long> idsList) {
+        int deleteResult = insuranceListMapper.deleteBatchIds(idsList);
+        if (deleteResult != 0){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
 }
 
 
