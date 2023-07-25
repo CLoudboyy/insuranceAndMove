@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @Author huangzhouyu
  * @Data 2023/7/23 15:23
@@ -23,8 +25,28 @@ public class InsuranceController {
     @Autowired
     private InsuranceListService insuranceListService;
 
+    /**
+     * 查询保险清单
+     * @param insuranceDTO
+     * @return
+     */
     @PostMapping("/selectInsuranceList")
     public ResponseData selectInsuranceList(@RequestBody InsuranceDTO insuranceDTO){
         return ResponseData.ok(insuranceListService.selectInsuranceList(insuranceDTO));
+    }
+
+    /**
+     * 删除保险清单
+     * @param idsList
+     * @return
+     */
+    @PostMapping("/deleteInsuranceByIds")
+    public ResponseData deleteInsuranceByIds(@RequestBody List<Long> idsList){
+        int deleteResult = insuranceListService.deleteInsuranceByIds(idsList);
+        if (deleteResult == 1){
+            return ResponseData.ok("删除成功");
+        }else {
+            return ResponseData.fail("删除失败");
+        }
     }
 }

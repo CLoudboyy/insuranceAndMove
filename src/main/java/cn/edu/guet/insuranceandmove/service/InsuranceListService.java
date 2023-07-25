@@ -14,4 +14,6 @@ import java.util.List;
 */
 public interface InsuranceListService extends IService<InsuranceList> {
     Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO);
+
+    int deleteInsuranceByIds(List<Long> idsList);
 }
