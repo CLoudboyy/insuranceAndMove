@@ -26,7 +26,10 @@ public class InsuranceController {
     private InsuranceListService insuranceListService;
 
     /**
+
      * 查询保险清单
+
+     * 查询保险清单（带分页）
      * @param insuranceDTO
      * @return
      */
@@ -34,6 +37,7 @@ public class InsuranceController {
     public ResponseData selectInsuranceList(@RequestBody InsuranceDTO insuranceDTO){
         return ResponseData.ok(insuranceListService.selectInsuranceList(insuranceDTO));
     }
+
 
     /**
      * 删除保险清单

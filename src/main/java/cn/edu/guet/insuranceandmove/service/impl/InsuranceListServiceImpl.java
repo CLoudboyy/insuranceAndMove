@@ -9,16 +9,18 @@ import cn.edu.guet.insuranceandmove.mapper.InsuranceListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
-* @author Cloud
-* @description 针对表【t_insurance_list(保险清单表;保险清单表)】的数据库操作Service实现
-* @createDate 2023-07-23 15:18:03
-*/
+ * @author Cloud
+ * @description 针对表【t_insurance_list(保险清单表;保险清单表)】的数据库操作Service实现
+ * @createDate 2023-07-23 15:18:03
+ */
 @Service
 public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, InsuranceList>
-    implements InsuranceListService{
+        implements InsuranceListService {
 
     @Autowired
     private InsuranceListMapper insuranceListMapper;
@@ -30,9 +32,10 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
      */
     @Override
     public Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO) {
-        insuranceDTO.setCurrent((insuranceDTO.getCurrent()-1) * insuranceDTO.getSize());
+
+        insuranceDTO.setCurrent((insuranceDTO.getCurrent() - 1) * insuranceDTO.getSize());
         System.out.println(insuranceDTO.getCaseOccurrenceTime());
-        List<InsuranceList> insuranceList= insuranceListMapper.selectInsurance(insuranceDTO);
+        List<InsuranceList> insuranceList = insuranceListMapper.selectInsurance(insuranceDTO);
         int totalRow = insuranceListMapper.selectTotalRow(insuranceDTO);
         int pages = 0;
         if (totalRow % insuranceDTO.getSize() == 0) {
@@ -62,7 +65,6 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         }else {
             return 0;
         }
-
     }
 }
 
