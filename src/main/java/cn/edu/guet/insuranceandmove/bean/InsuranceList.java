@@ -496,4 +496,34 @@ public class InsuranceList implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "InsuranceList{" +
+                "id=" + id +
+                ", prefecture=" + prefecture +
+                ", county=" + county +
+                ", caseName='" + caseName + '\'' +
+                ", caseOccurrenceTime=" + caseOccurrenceTime +
+                ", networkHierarchy=" + networkHierarchy +
+                ", caseProgressSituation=" + caseProgressSituation +
+                ", reportingReasonsType=" + reportingReasonsType +
+                ", caseReporter='" + caseReporter + '\'' +
+                ", maintenanceManager='" + maintenanceManager + '\'' +
+                ", estimatedLossAmount=" + estimatedLossAmount +
+                ", compensationType=" + compensationType +
+                ", caseCompletionConfirm=" + caseCompletionConfirm +
+                ", insuranceContentDescription='" + insuranceContentDescription + '\'' +
+                ", compensationReceivedAmount=" + compensationReceivedAmount +
+                ", compensationReceivedTime=" + compensationReceivedTime +
+                ", compensationSituationRemark='" + compensationSituationRemark + '\'' +
+                ", icLedgerRegistrationName='" + icLedgerRegistrationName + '\'' +
+                ", icInsuranceReportNo='" + icInsuranceReportNo + '\'' +
+                ", icEstimatedReparationAmount=" + icEstimatedReparationAmount +
+                ", compensationProgress=" + compensationProgress +
+                ", insuranceRemarks='" + insuranceRemarks + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }
