@@ -5,6 +5,7 @@ import cn.edu.guet.insuranceandmove.bean.InsuranceList;
 import cn.edu.guet.insuranceandmove.bean.InsuranceStatisticsVO;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
+import cn.edu.guet.insuranceandmove.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class InsuranceController {
 
     @Autowired
     private InsuranceListService insuranceListService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 查询保险清单
@@ -63,5 +67,10 @@ public class InsuranceController {
             System.out.println("year:" + insuranceStatisticsVO.getYear());
         }
         return ResponseData.ok(insuranceListService.selectInsuranceStatisticsByYear(insuranceStatisticsVO.getYear()));
+    }
+
+    @GetMapping("/getPermissionsByUsername")
+    public ResponseData getPermissionByUsername(String username) {
+        return ResponseData.ok(userService.getPermissionByUsername(username));
     }
 }
