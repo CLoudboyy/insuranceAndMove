@@ -3,6 +3,9 @@ package cn.edu.guet.insuranceandmove.service.impl;
 import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
 import cn.edu.guet.insuranceandmove.bean.InsuranceStatistics;
 import cn.edu.guet.insuranceandmove.bean.Page;
+
+import cn.edu.guet.insuranceandmove.common.ResponseData;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.edu.guet.insuranceandmove.bean.InsuranceList;
@@ -36,7 +39,6 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
     public Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO) {
 
         insuranceDTO.setCurrent((insuranceDTO.getCurrent() - 1) * insuranceDTO.getSize());
-        System.out.println(insuranceDTO.getCaseOccurrenceTime());
         List<InsuranceList> insuranceList = insuranceListMapper.selectInsurance(insuranceDTO);
         int totalRow = insuranceListMapper.selectTotalRow(insuranceDTO);
         int pages = 0;
@@ -71,6 +73,14 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
     }
 
     @Override
+    public ResponseData getInsuranceById(Long id) {
+
+        List<InsuranceList> insuranceListList=insuranceListMapper.getInsuranceById(id);
+        System.out.println(insuranceListList);
+        return ResponseData.ok(insuranceListList);
+   }
+   
+   @Override
     public List<InsuranceStatistics> selectInsuranceStatisticsByYear(int year) {
         List<InsuranceStatistics> insuranceStatisticsList = new ArrayList<>();
         for (int i = 1; i <= 14; i++) {
@@ -175,8 +185,7 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         });
 
         System.out.println(insuranceStatisticsList);
-
-
+        
         return insuranceStatisticsList;
     }
 }
