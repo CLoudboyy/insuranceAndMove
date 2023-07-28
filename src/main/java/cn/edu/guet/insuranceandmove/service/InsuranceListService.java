@@ -2,6 +2,7 @@ package cn.edu.guet.insuranceandmove.service;
 
 import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
 import cn.edu.guet.insuranceandmove.bean.InsuranceList;
+import cn.edu.guet.insuranceandmove.bean.InsuranceStatistics;
 import cn.edu.guet.insuranceandmove.bean.Page;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -19,4 +20,7 @@ public interface InsuranceListService extends IService<InsuranceList> {
     int deleteInsuranceByIds(List<Long> idsList);
 
     ResponseData getInsuranceById(Long id);
+
+    List<InsuranceStatistics> selectInsuranceStatisticsByYear(int year);
+
 }
