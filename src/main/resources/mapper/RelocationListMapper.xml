@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.guet.insuranceandmove.mapper.RelocationListMapper">
+
+    <resultMap id="BaseResultMap" type="cn.edu.guet.insuranceandmove.bean.RelocationList">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="prefecture" column="prefecture" jdbcType="INTEGER"/>
+            <result property="county" column="county" jdbcType="INTEGER"/>
+            <result property="modifyProjectName" column="modify_project_name" jdbcType="VARCHAR"/>
+            <result property="estimatedMaintainTotalCost" column="estimated_maintain_total_cost" jdbcType="DECIMAL"/>
+            <result property="expectedBeginTime" column="expected_begin_time" jdbcType="TIMESTAMP"/>
+            <result property="expectedCompletionTime" column="expected_completion_time" jdbcType="TIMESTAMP"/>
+            <result property="governmentInterfacer" column="government_interfacer" jdbcType="VARCHAR"/>
+            <result property="governmentInterfacerCif" column="government_interfacer_cif" jdbcType="VARCHAR"/>
+            <result property="ourInterfacer" column="our_interfacer" jdbcType="VARCHAR"/>
+            <result property="ourInterfacerCif" column="our_interfacer_cif" jdbcType="VARCHAR"/>
+            <result property="discussSchedule" column="discuss_schedule" jdbcType="VARCHAR"/>
+            <result property="actualCompletionTime" column="actual_completion_time" jdbcType="TIMESTAMP"/>
+            <result property="compensationCosts" column="compensation_costs" jdbcType="DECIMAL"/>
+            <result property="wireMaintainCosts" column="wire_maintain_costs" jdbcType="DECIMAL"/>
+            <result property="otherBudgetName" column="other_budget_name" jdbcType="VARCHAR"/>
+            <result property="otherBudgetId" column="other_budget_id" jdbcType="VARCHAR"/>
+            <result property="maintainBudgetName" column="maintain_budget_name" jdbcType="VARCHAR"/>
+            <result property="compensationRatio" column="compensation_ratio" jdbcType="FLOAT"/>
+            <result property="compensationSchedule" column="compensation_schedule" jdbcType="INTEGER"/>
+            <result property="itemDescribe" column="item_describe" jdbcType="VARCHAR"/>
+            <result property="unresolvedResultAnalysis" column="unresolved_result_analysis" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,prefecture,county,
+        modify_project_name,estimated_maintain_total_cost,expected_begin_time,
+        expected_completion_time,government_interfacer,government_interfacer_cif,
+        our_interfacer,our_interfacer_cif,discuss_schedule,
+        actual_completion_time,compensation_costs,wire_maintain_costs,
+        other_budget_name,other_budget_id,maintain_budget_name,
+        compensation_ratio,compensation_schedule,item_describe,
+        unresolved_result_analysis,create_time,update_time
+    </sql>
+    <delete id="deleteRelocation">
+        DELETE FROM modify_basic_info WHERE id=#{id}
+    </delete>
+    <select id="selectTotalRow" resultType="java.lang.Integer"></select>
+    <select id="searchRelocation" resultMap="BaseResultMap"></select>
+    <select id="getRelocationById" resultType="cn.edu.guet.insuranceandmove.bean.RelocationList">
+        select *
+        from modify_basic_info
+        where id = #{id}
+    </select>
+</mapper>
+
