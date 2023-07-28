@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.guet.insuranceandmove.mapper.PermissionMapper">
+
+    <resultMap id="BaseResultMap" type="cn.edu.guet.insuranceandmove.bean.Permission">
+            <id property="permissionId" column="PERMISSION_ID" jdbcType="INTEGER"/>
+            <result property="parentPermissionId" column="PARENT_PERMISSION_ID" jdbcType="INTEGER"/>
+            <result property="permissionName" column="PERMISSION_NAME" jdbcType="VARCHAR"/>
+            <result property="url" column="URL" jdbcType="VARCHAR"/>
+            <result property="target" column="TARGET" jdbcType="VARCHAR"/>
+            <result property="icon" column="ICON" jdbcType="VARCHAR"/>
+            <result property="isParent" column="IS_PARENT" jdbcType="VARCHAR"/>
+            <result property="createdBy" column="CREATED_BY" jdbcType="VARCHAR"/>
+            <result property="createdTime" column="CREATED_TIME" jdbcType="TIMESTAMP"/>
+            <result property="updatedBy" column="UPDATED_BY" jdbcType="VARCHAR"/>
+            <result property="updatedTime" column="UPDATED_TIME" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        PERMISSION_ID,PARENT_PERMISSION_ID,PERMISSION_NAME,
+        URL,TARGET,ICON,
+        IS_PARENT,CREATED_BY,CREATED_TIME,
+        UPDATED_BY,UPDATED_TIME
+    </sql>
+    <select id="getChildPermissions" resultMap="BaseResultMap" parameterType="int">
+        SELECT c.*
+        FROM permissions p,
+             permissions c
+        WHERE c.parent_permission_id = p.permission_id
+          AND c.parent_permission_id = #{id}
+    </select>
+</mapper>

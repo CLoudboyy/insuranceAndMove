@@ -100,7 +100,7 @@ public class InsuranceController {
     }
 
     @GetMapping("/getPermissionsByUsername")
-    public ResponseData getPermissionByUsername(String username) {
-        return ResponseData.ok(userService.getPermissionByUsername(username));
+    public ResponseData getPermissionsByUsername(String username) {
+        return ResponseData.ok(userService.getPermissionsByUsername(username));
     }
 }
