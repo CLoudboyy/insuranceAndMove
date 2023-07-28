@@ -132,5 +132,9 @@
             </if>
         </where>
     </select>
-
+    <select id="getInsuranceById" resultType="cn.edu.guet.insuranceandmove.bean.InsuranceList">
+        select *
+        from t_insurance_list
+        where id = #{id}
+    </select>
 </mapper>

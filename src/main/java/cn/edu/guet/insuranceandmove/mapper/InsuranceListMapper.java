@@ -24,6 +24,9 @@ public interface InsuranceListMapper extends BaseMapper<InsuranceList> {
      * 查询保险清单总记录数
      */
     int selectTotalRow(InsuranceDTO insuranceDTO);
+
+
+    List<InsuranceList> getInsuranceById(Long id);
 }
 
 

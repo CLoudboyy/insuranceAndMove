@@ -2,6 +2,7 @@ package cn.edu.guet.insuranceandmove.service.impl;
 
 import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
 import cn.edu.guet.insuranceandmove.bean.Page;
+import cn.edu.guet.insuranceandmove.common.ResponseData;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.edu.guet.insuranceandmove.bean.InsuranceList;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
@@ -34,7 +35,6 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
     public Page<InsuranceList> selectInsuranceList(InsuranceDTO insuranceDTO) {
 
         insuranceDTO.setCurrent((insuranceDTO.getCurrent() - 1) * insuranceDTO.getSize());
-        System.out.println(insuranceDTO.getCaseOccurrenceTime());
         List<InsuranceList> insuranceList = insuranceListMapper.selectInsurance(insuranceDTO);
         int totalRow = insuranceListMapper.selectTotalRow(insuranceDTO);
         int pages = 0;
@@ -65,6 +65,14 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         }else {
             return 0;
         }
+    }
+
+    @Override
+    public ResponseData getInsuranceById(Long id) {
+
+        List<InsuranceList> insuranceListList=insuranceListMapper.getInsuranceById(id);
+        System.out.println(insuranceListList);
+        return ResponseData.ok(insuranceListList);
     }
 }
 
