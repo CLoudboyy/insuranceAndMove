@@ -103,4 +103,10 @@ public class InsuranceController {
     public ResponseData getPermissionsByUsername(String username) {
         return ResponseData.ok(userService.getPermissionsByUsername(username));
     }
+
+    @PostMapping("/getInsuranceListExcelById")
+    public ResponseData getInsuranceListExcelById(@RequestBody List<Long> idsList){
+        insuranceListService.simpleWrite(idsList);
+        return ResponseData.ok();
+    }
 }

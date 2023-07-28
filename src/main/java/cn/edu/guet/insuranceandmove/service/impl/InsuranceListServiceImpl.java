@@ -1,14 +1,13 @@
 package cn.edu.guet.insuranceandmove.service.impl;
 
-import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
-import cn.edu.guet.insuranceandmove.bean.InsuranceStatistics;
-import cn.edu.guet.insuranceandmove.bean.Page;
+import cn.edu.guet.insuranceandmove.bean.*;
 
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 
+import cn.edu.guet.insuranceandmove.handler.InsuranceSheetWriteHandler;
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import cn.edu.guet.insuranceandmove.bean.InsuranceList;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
 import cn.edu.guet.insuranceandmove.mapper.InsuranceListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Cloud
@@ -188,6 +188,69 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         
         return insuranceStatisticsList;
     }
+
+    @Override
+    public void simpleWrite(List<Long> idsList){
+        String fileName = "C:\\Users\\Cloud\\Desktop\\test\\" + System.currentTimeMillis() + ".xlsx";
+
+        // 模拟获取数据,此处设定查询条件
+        List<InsuranceList> insuranceLists = insuranceListMapper.selectBatchIds(idsList);
+
+        // 将数据库数据装填到excel包装类
+        List<InsuranceModel> insuranceModels = insuranceLists.stream().map(insuranceItem -> {
+
+            InsuranceModel insuranceModel = new InsuranceModel();
+            insuranceModel.setSubmitTime(new Date());
+            insuranceModel.setInsuranceId(insuranceItem.getId());
+            insuranceModel.setDomainName(insuranceItem.getPrefecture()+"");
+            insuranceModel.setSubdomainName(insuranceItem.getCounty()+"");
+            insuranceModel.setNetworkLayer(insuranceItem.getNetworkHierarchy());
+            insuranceModel.setCaseOccurTime(insuranceItem.getCaseOccurrenceTime());
+            insuranceModel.setCaseName(insuranceItem.getCaseName());
+            insuranceModel.setCaseDetailedStatement(insuranceItem.getInsuranceContentDescription());
+            insuranceModel.setCaseProgress(insuranceItem.getCaseProgressSituation());
+            insuranceModel.setCaseClassificationReason(insuranceItem.getReportingReasonsType());
+            insuranceModel.setSpottedInformant(insuranceItem.getCaseReporter());
+            insuranceModel.setSelfMaintainResponsibility(insuranceItem.getMaintenanceManager());
+            insuranceModel.setPreviewLossAmount(insuranceItem.getEstimatedLossAmount());
+            insuranceModel.setPaidType(insuranceItem.getCompensationType());
+            insuranceModel.setPayAccountAmount(insuranceItem.getCompensationReceivedAmount());
+            insuranceModel.setPayAccountTime(insuranceItem.getCompensationReceivedTime());
+            insuranceModel.setInsuranceBillRegisterName(insuranceItem.getIcLedgerRegistrationName());
+            insuranceModel.setInsuranceReportNo(insuranceItem.getIcInsuranceReportNo());
+            insuranceModel.setInsuranceEstimatePayAmount(insuranceItem.getIcEstimatedReparationAmount());
+            insuranceModel.setPayProgress(insuranceItem.getCompensationProgress());
+            insuranceModel.setPayStatusRemark(insuranceItem.getInsuranceRemarks());
+            insuranceModel.setCompletionConfirmed(insuranceItem.getCaseCompletionConfirm()+"");
+            insuranceModel.setInsuranceRemark(insuranceItem.getInsuranceRemarks());
+
+            return insuranceModel;
+        }).collect(Collectors.toList());
+
+        // 定义下拉框数据
+        Map<Integer,String[]> mapDropDown = new HashMap<>();
+
+        // 设定选项
+        String[] networkLayers = {"全部","国际政企","一干","二干","干线OP","本地网核心","本地网汇聚","本地网接入","其他全部"};
+        String[] caseProgresses = {"全部","已到账","资料完成待赔付","资料收集发送中","资料收集中","第三方赔付协商中"};
+        String[] caseClassificationReasons = {"全部","被盗案件","自然灾害","火灾","第三者责任市政施工挖断","第三者责任市政施工剪断","第三者责任大车挂断","第三者责任其他"};
+        String[] paidTypes = {"全部","保险公司赔付","第三方或个人赔付"};
+        String[] payProgresses = {"全部","已赔付","待赔付","PICC不予赔付"};
+        String[] completionConfirmed = {"已赔付并到账","已赔付未到账"};
+
+        // 指定列数,从0开始
+        mapDropDown.put(4,networkLayers);
+        mapDropDown.put(7,caseProgresses);
+        mapDropDown.put(8,caseClassificationReasons);
+        mapDropDown.put(12,paidTypes);
+        mapDropDown.put(18,payProgresses);
+        mapDropDown.put(20,completionConfirmed);
+
+        EasyExcel.write(fileName, InsuranceModel.class).sheet("保险清单")
+                .registerWriteHandler(new InsuranceSheetWriteHandler(mapDropDown)).doWrite(insuranceLists);
+    }
+
+
 }
 
 
