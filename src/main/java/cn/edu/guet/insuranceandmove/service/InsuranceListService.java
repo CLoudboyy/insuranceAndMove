@@ -25,4 +25,5 @@ public interface InsuranceListService extends IService<InsuranceList> {
 
     void simpleWrite(List<Integer> idsList);
 
+    void exportInsuranceStatistics(List<InsuranceStatistics> insuranceStatisticsList);
 }

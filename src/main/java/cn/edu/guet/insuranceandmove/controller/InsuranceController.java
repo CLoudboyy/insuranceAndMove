@@ -2,6 +2,7 @@ package cn.edu.guet.insuranceandmove.controller;
 
 import cn.edu.guet.insuranceandmove.bean.InsuranceDTO;
 import cn.edu.guet.insuranceandmove.bean.InsuranceList;
+import cn.edu.guet.insuranceandmove.bean.InsuranceStatistics;
 import cn.edu.guet.insuranceandmove.bean.InsuranceStatisticsVO;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
@@ -69,6 +70,7 @@ public class InsuranceController {
 
     /**
      * 新增保险
+     *
      * @param insuranceList
      * @return
      */
@@ -82,6 +84,7 @@ public class InsuranceController {
 
     /**
      * 查询保险（Id）
+     *
      * @param id
      * @return
      */
@@ -92,6 +95,7 @@ public class InsuranceController {
 
     /**
      * 修改保险
+     *
      * @param insuranceList
      * @return
      */
@@ -100,27 +104,29 @@ public class InsuranceController {
         // 作为查询条件
         Integer id = insuranceList.getId();
         UpdateWrapper<InsuranceList> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id",id);
+        updateWrapper.eq("id", id);
         insuranceList.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        insuranceListService.update(insuranceList,updateWrapper);
+        insuranceListService.update(insuranceList, updateWrapper);
         return ResponseData.ok("清单修改成功");
     }
 
     /**
      * 保险汇总统计
+     *
      * @param insuranceStatisticsVO
      * @return
      */
     @PostMapping("/selectInsuranceStatisticsByYear")
     public ResponseData selectInsuranceStatisticsByYear(@RequestBody InsuranceStatisticsVO insuranceStatisticsVO) {
         if (insuranceStatisticsVO.getYear() == null) {
-            System.out.println("year:" + insuranceStatisticsVO.getYear());
+            return ResponseData.fail();
         }
         return ResponseData.ok(insuranceListService.selectInsuranceStatisticsByYear(insuranceStatisticsVO.getYear()));
     }
 
     /**
      * 获取权限菜单
+     *
      * @param username
      * @return
      */
@@ -131,13 +137,27 @@ public class InsuranceController {
 
     /**
      * 导出保险清单Excel
+     *
      * @param idsList
      * @return
      */
     @PostMapping("/getInsuranceListExcelById")
-    public ResponseData getInsuranceListExcelById(@RequestBody List<Integer> idsList){
+    public ResponseData getInsuranceListExcelById(@RequestBody List<Integer> idsList) {
         System.out.println(idsList);
         insuranceListService.simpleWrite(idsList);
+        return ResponseData.ok();
+    }
+
+    /**
+     * 导出保险汇总统计Excel
+     * @param insuranceStatisticsVO
+     * @return
+     */
+    @PostMapping("/exportInsuranceStatistics")
+    public ResponseData exportInsuranceStatistics(@RequestBody InsuranceStatisticsVO insuranceStatisticsVO) {
+        List<InsuranceStatistics> insuranceStatisticsList
+                = insuranceListService.selectInsuranceStatisticsByYear(insuranceStatisticsVO.getYear());
+        insuranceListService.exportInsuranceStatistics(insuranceStatisticsList);
         return ResponseData.ok();
     }
 }
