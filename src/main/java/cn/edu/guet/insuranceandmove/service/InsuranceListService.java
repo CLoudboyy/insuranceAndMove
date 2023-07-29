@@ -23,6 +23,6 @@ public interface InsuranceListService extends IService<InsuranceList> {
 
     List<InsuranceStatistics> selectInsuranceStatisticsByYear(int year);
 
-    void simpleWrite(List<Long> idsList);
+    void simpleWrite(List<Integer> idsList);
 
 }

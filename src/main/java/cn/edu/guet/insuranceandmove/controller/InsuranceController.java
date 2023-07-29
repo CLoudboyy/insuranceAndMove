@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,7 +106,8 @@ public class InsuranceController {
     }
 
     @PostMapping("/getInsuranceListExcelById")
-    public ResponseData getInsuranceListExcelById(@RequestBody List<Long> idsList){
+    public ResponseData getInsuranceListExcelById(@RequestBody List<Integer> idsList){
+        System.out.println(idsList);
         insuranceListService.simpleWrite(idsList);
         return ResponseData.ok();
     }
