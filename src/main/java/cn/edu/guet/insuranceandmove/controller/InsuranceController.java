@@ -67,20 +67,34 @@ public class InsuranceController {
         }
     }
 
+    /**
+     * 新增保险
+     * @param insuranceList
+     * @return
+     */
     @PostMapping("/saveInsurance")
     public ResponseData saveInsurance(@RequestBody InsuranceList insuranceList) {
         insuranceList.setCreateTime(new Timestamp(System.currentTimeMillis()));
         insuranceList.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         insuranceListService.save(insuranceList);
-        return ResponseData.ok("工单创建成功");
+        return ResponseData.ok("保存成功");
     }
 
-
+    /**
+     * 查询保险（Id）
+     * @param id
+     * @return
+     */
     @GetMapping("/selectInsurance/{id}")
     public ResponseData getInsuranceById(@PathVariable Long id) {
         return insuranceListService.getInsuranceById(id);
     }
 
+    /**
+     * 修改保险
+     * @param insuranceList
+     * @return
+     */
     @PostMapping("/modifyInsurance")
     public ResponseData modifyInsurance(@RequestBody InsuranceList insuranceList) {
         // 作为查询条件
@@ -92,6 +106,11 @@ public class InsuranceController {
         return ResponseData.ok("清单修改成功");
     }
 
+    /**
+     * 保险汇总统计
+     * @param insuranceStatisticsVO
+     * @return
+     */
     @PostMapping("/selectInsuranceStatisticsByYear")
     public ResponseData selectInsuranceStatisticsByYear(@RequestBody InsuranceStatisticsVO insuranceStatisticsVO) {
         if (insuranceStatisticsVO.getYear() == null) {
@@ -100,11 +119,21 @@ public class InsuranceController {
         return ResponseData.ok(insuranceListService.selectInsuranceStatisticsByYear(insuranceStatisticsVO.getYear()));
     }
 
+    /**
+     * 获取权限菜单
+     * @param username
+     * @return
+     */
     @GetMapping("/getPermissionsByUsername")
     public ResponseData getPermissionsByUsername(String username) {
         return ResponseData.ok(userService.getPermissionsByUsername(username));
     }
 
+    /**
+     * 导出保险清单Excel
+     * @param idsList
+     * @return
+     */
     @PostMapping("/getInsuranceListExcelById")
     public ResponseData getInsuranceListExcelById(@RequestBody List<Integer> idsList){
         System.out.println(idsList);
