@@ -186,6 +186,75 @@ public class InsuranceModel implements Serializable {
     @ExcelProperty(value = "备注")
     private String insuranceRemark;
 
+
+    public String getDomainName(){
+        if (this.domainName == null){
+            return "全部";
+        }
+        return domainName;
+    }
+
+    public void setDomainName(String domainName){
+        if (domainName.equals("0")){
+            this.domainName = "全部";
+        }else if(domainName.equals("1")){
+            this.domainName="乌鲁木齐";
+        }else if (domainName.equals("2")){
+            this.domainName = "克拉玛依";
+        }else if (domainName.equals("3")){
+            this.domainName = "吐鲁番";
+        }else if (domainName.equals("4")){
+            this.domainName = "哈密";
+        }else if (domainName.equals("5")){
+            this.domainName = "阿克苏";
+        }else if (domainName.equals("6")){
+            this.domainName = "喀什";
+        }else if (domainName.equals("7")){
+            this.domainName = "和田";
+        }else if (domainName.equals("8")){
+            this.domainName = "昌吉";
+        }else if (domainName.equals("9")){
+            this.domainName = "博尔塔拉";
+        }else if (domainName.equals("10")){
+            this.domainName = "巴音郭楞";
+        }else if (domainName.equals("11")){
+            this.domainName = "克孜勒苏柯尔克孜";
+        }else if (domainName.equals("12")){
+            this.domainName = "伊犁";
+        }else if (domainName.equals("13")){
+            this.domainName = "塔城";
+        }else if (domainName.equals("14")){
+            this.domainName = "阿勒泰";
+        }
+    }
+
+    public String getSubdomainName(){
+        if (this.domainName == null){
+            return "全部";
+        }
+        return subdomainName;
+    }
+
+    public void setSubdomainName(String subdomainName){
+        if (subdomainName.equals("0")){
+            this.subdomainName = "全部";
+        }else if (subdomainName.equals("1")){
+            this.subdomainName = "独山子";
+        }else if (subdomainName.equals("2")){
+            this.subdomainName = "水磨沟";
+        }else if (subdomainName.equals("3")){
+            this.subdomainName = "白碱滩";
+        }else if (subdomainName.equals("4")){
+            this.subdomainName = "伊宁";
+        }else if (subdomainName.equals("5")){
+            this.subdomainName = "达坂城";
+        }else if (subdomainName.equals("6")){
+            this.subdomainName = "乌尔禾";
+        }else if (subdomainName.equals("7")){
+            this.subdomainName = "沙依巴克";
+        }
+    }
+
     public String getNetworkLayer() {
         if(this.networkLayer == null){
             return "全部";
