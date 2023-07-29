@@ -71,6 +71,11 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         }
     }
 
+    /**
+     * 查询保险清单（id）
+     * @param id
+     * @return
+     */
     @Override
     public ResponseData getInsuranceById(Long id) {
 
@@ -78,7 +83,12 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         System.out.println(insuranceListList);
         return ResponseData.ok(insuranceListList);
    }
-   
+
+    /**
+     * 汇总统计保险清单
+     * @param year
+     * @return
+     */
    @Override
     public List<InsuranceStatistics> selectInsuranceStatisticsByYear(int year) {
         List<InsuranceStatistics> insuranceStatisticsList = new ArrayList<>();
@@ -188,6 +198,10 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         return insuranceStatisticsList;
     }
 
+    /**
+     * 导出保险清单Excel
+     * @param idsList
+     */
     @Override
     public void simpleWrite(List<Integer> idsList){
         String fileName = "C:\\Users\\Cloud\\Desktop\\test\\" + System.currentTimeMillis() + ".xlsx";

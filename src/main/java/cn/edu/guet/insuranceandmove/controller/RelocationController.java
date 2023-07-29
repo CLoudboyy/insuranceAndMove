@@ -24,14 +24,22 @@ public class RelocationController {
     @Autowired
     private RelocationListService relocationListService;
 
-    //    查询
+    /**
+     * 查询
+     * @param relocationDTO
+     * @return
+     */
     @PostMapping("/searchRelocation")
     public ResponseData searchRelocation(@RequestBody RelocationListQueryDTO relocationDTO) {
-        System.out.println(relocationDTO);
         IPage<RelocationList> relocationIPage = relocationListService.searchRelocation(relocationDTO);
         return ResponseData.ok(relocationIPage);
     }
-    //    删除
+
+    /**
+     * 删除
+     * @param ids
+     * @return
+     */
     @PostMapping("/deleteRelocation")
     public ResponseData deleteRelocation(@RequestBody List<Long> ids) {
         return relocationListService.deleteRelocation(ids);
@@ -43,7 +51,11 @@ public class RelocationController {
         return relocationListService.getRelocationById(id);
     }
 
-    //    新增保存
+    /**
+     * 新增保存
+     * @param relocationList
+     * @return
+     */
     @PostMapping("/createRelocationList")
     public ResponseData createRelocationList(@RequestBody RelocationList relocationList) {
         System.out.println(relocationList);
@@ -51,7 +63,11 @@ public class RelocationController {
         return ResponseData.ok("保存成功！");
     }
 
-    //修改
+    /**
+     * 修改
+     * @param relocationList
+     * @return
+     */
     @PostMapping("/modifyRelocation")
     public ResponseData modifyInsurance(@RequestBody RelocationList relocationList) {
         // 作为查询条件
@@ -62,10 +78,26 @@ public class RelocationController {
         relocationListService.update(relocationList,updateWrapper);
         return ResponseData.ok("清单修改成功");
     }
-    //    统计
+
+    /**
+     * 汇总统计
+     * @param relocationStatisticsVO
+     * @return
+     */
     @PostMapping("/selectRelocationStatisticsByYear")
     public ResponseData selectRelocationStatisticsByYear(@RequestBody RelocationStatisticsVO relocationStatisticsVO){
         return ResponseData.ok(relocationListService.selectRelocationStatisticsByYear(relocationStatisticsVO.getYear()));
+    }
+
+    /**
+     * 导出迁改清单Excel
+     * @param idsList
+     * @return
+     */
+    @PostMapping("/exportRelocationListExcel")
+    public ResponseData exportRelocationListExcel(@RequestBody List<Integer> idsList){
+        relocationListService.exportRelocationListExcel(idsList);
+        return ResponseData.ok();
     }
 
 }

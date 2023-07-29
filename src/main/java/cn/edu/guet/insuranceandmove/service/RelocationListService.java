@@ -20,4 +20,6 @@ public interface RelocationListService extends IService<RelocationList> {
     RelocationList createRelocationList(RelocationList relocationList);
     List<RelocationStatistics> selectRelocationStatisticsByYear(int year);
     ResponseData getRelocationById(Long id);
+
+    void exportRelocationListExcel(List<Integer> idsList);
 }
