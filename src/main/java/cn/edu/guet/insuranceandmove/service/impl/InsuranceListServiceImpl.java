@@ -2,6 +2,7 @@ package cn.edu.guet.insuranceandmove.service.impl;
 
 import cn.edu.guet.insuranceandmove.bean.*;
 
+import cn.edu.guet.insuranceandmove.common.CalculateUtil;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 
 import com.alibaba.excel.EasyExcel;
@@ -73,23 +74,25 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
 
     /**
      * 查询保险清单（id）
+     *
      * @param id
      * @return
      */
     @Override
     public ResponseData getInsuranceById(Long id) {
 
-        List<InsuranceList> insuranceListList=insuranceListMapper.getInsuranceById(id);
+        List<InsuranceList> insuranceListList = insuranceListMapper.getInsuranceById(id);
         System.out.println(insuranceListList);
         return ResponseData.ok(insuranceListList);
-   }
+    }
 
     /**
      * 汇总统计保险清单
+     *
      * @param year
      * @return
      */
-   @Override
+    @Override
     public List<InsuranceStatistics> selectInsuranceStatisticsByYear(int year) {
         List<InsuranceStatistics> insuranceStatisticsList = new ArrayList<>();
         for (int i = 1; i <= 14; i++) {
@@ -112,98 +115,30 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
             insuranceStatistics.setTotalMoney(BigDecimal.ZERO);
             insuranceStatisticsList.add(insuranceStatistics);
         }
+
         QueryWrapper<InsuranceList> queryWrapper = new QueryWrapper<>();
         // 设置查询条件，筛选指定年份的数据
         queryWrapper.apply("YEAR(case_occurrence_time) = {0}", year);
 
         // 执行查询
         List<InsuranceList> insuranceLists = insuranceListMapper.selectList(queryWrapper);
+
         insuranceLists.forEach(insuranceList -> {
-            Integer prefecture = insuranceList.getPrefecture();
-            Date occurrenceTime = insuranceList.getCaseOccurrenceTime();
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(occurrenceTime);
-            // 获取项目发生的月份
-            int month = calendar.get(Calendar.MONTH) + 1;
-
-            switch (month) {
-                case 1:
-                    InsuranceStatistics januaryStats = insuranceStatisticsList.get(prefecture - 1);
-                    januaryStats.setJanuary(januaryStats.getJanuary() + 1);
-                    januaryStats.setCount(januaryStats.getCount() + 1);
-                    break;
-                case 2:
-                    InsuranceStatistics februaryStats = insuranceStatisticsList.get(prefecture - 1);
-                    februaryStats.setFebruary(februaryStats.getFebruary() + 1);
-                    februaryStats.setCount(februaryStats.getCount() + 1);
-                    break;
-                case 3:
-                    InsuranceStatistics marchStats = insuranceStatisticsList.get(prefecture - 1);
-                    marchStats.setMarch(marchStats.getMarch() + 1);
-                    marchStats.setCount(marchStats.getCount() + 1);
-                    break;
-                case 4:
-                    InsuranceStatistics aprilStats = insuranceStatisticsList.get(prefecture - 1);
-                    aprilStats.setApril(aprilStats.getApril() + 1);
-                    aprilStats.setCount(aprilStats.getCount() + 1);
-                    break;
-                case 5:
-                    InsuranceStatistics mayStats = insuranceStatisticsList.get(prefecture - 1);
-                    mayStats.setMay(mayStats.getMay() + 1);
-                    mayStats.setCount(mayStats.getCount() + 1);
-                    break;
-                case 6:
-                    InsuranceStatistics juneStats = insuranceStatisticsList.get(prefecture - 1);
-                    juneStats.setJune(juneStats.getJune() + 1);
-                    juneStats.setCount(juneStats.getCount() + 1);
-                    break;
-                case 7:
-                    InsuranceStatistics julyStats = insuranceStatisticsList.get(prefecture - 1);
-                    julyStats.setJuly(julyStats.getJuly() + 1);
-                    julyStats.setCount(julyStats.getCount() + 1);
-                    break;
-                case 8:
-                    InsuranceStatistics augustStats = insuranceStatisticsList.get(prefecture - 1);
-                    augustStats.setAugust(augustStats.getAugust() + 1);
-                    augustStats.setCount(augustStats.getCount() + 1);
-                    break;
-                case 9:
-                    InsuranceStatistics septemberStats = insuranceStatisticsList.get(prefecture - 1);
-                    septemberStats.setSeptember(septemberStats.getSeptember() + 1);
-                    septemberStats.setCount(septemberStats.getCount() + 1);
-                    break;
-                case 10:
-                    InsuranceStatistics octoberStats = insuranceStatisticsList.get(prefecture - 1);
-                    octoberStats.setOctober(octoberStats.getOctober() + 1);
-                    octoberStats.setCount(octoberStats.getCount() + 1);
-                    break;
-                case 11:
-                    InsuranceStatistics novemberStats = insuranceStatisticsList.get(prefecture - 1);
-                    novemberStats.setNovember(novemberStats.getNovember() + 1);
-                    novemberStats.setCount(novemberStats.getCount() + 1);
-                    break;
-                case 12:
-                    InsuranceStatistics decemberStats = insuranceStatisticsList.get(prefecture - 1);
-                    decemberStats.setDecember(decemberStats.getDecember() + 1);
-                    decemberStats.setCount(decemberStats.getCount() + 1);
-                    break;
-                default:
-                    break;
-            }
+            CalculateUtil.updateInsuranceStatisticsList(insuranceStatisticsList, insuranceList);
         });
+        InsuranceStatistics totalStatistics = CalculateUtil.calculateInsuranceCounts(insuranceStatisticsList);
+        insuranceStatisticsList.add(totalStatistics);
 
-        System.out.println(insuranceStatisticsList);
-        
         return insuranceStatisticsList;
     }
 
     /**
      * 导出保险清单Excel
+     *
      * @param idsList
      */
     @Override
-    public void simpleWrite(List<Integer> idsList){
+    public void simpleWrite(List<Integer> idsList) {
         String fileName = "C:\\Users\\Cloud\\Desktop\\test\\" + System.currentTimeMillis() + ".xlsx";
 
         // 模拟获取数据,此处设定查询条件
@@ -215,8 +150,8 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
             InsuranceModel insuranceModel = new InsuranceModel();
             insuranceModel.setSubmitTime(new Date());
             insuranceModel.setInsuranceId(insuranceItem.getId());
-            insuranceModel.setDomainName(insuranceItem.getPrefecture()+"");
-            insuranceModel.setSubdomainName(insuranceItem.getCounty()+"");
+            insuranceModel.setDomainName(insuranceItem.getPrefecture() + "");
+            insuranceModel.setSubdomainName(insuranceItem.getCounty() + "");
             insuranceModel.setNetworkLayer(insuranceItem.getNetworkHierarchy());
             insuranceModel.setCaseOccurTime(insuranceItem.getCaseOccurrenceTime());
             insuranceModel.setCaseName(insuranceItem.getCaseName());
@@ -234,13 +169,41 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
             insuranceModel.setInsuranceEstimatePayAmount(insuranceItem.getIcEstimatedReparationAmount());
             insuranceModel.setPayProgress(insuranceItem.getCompensationProgress());
             insuranceModel.setPayStatusRemark(insuranceItem.getInsuranceRemarks());
-            insuranceModel.setCompletionConfirmed(insuranceItem.getCaseCompletionConfirm()+"");
+            insuranceModel.setCompletionConfirmed(insuranceItem.getCaseCompletionConfirm() + "");
             insuranceModel.setInsuranceRemark(insuranceItem.getInsuranceRemarks());
 
             return insuranceModel;
         }).collect(Collectors.toList());
 
         EasyExcel.write(fileName, InsuranceModel.class).sheet("Sheet 1").doWrite(insuranceModels);
+    }
+
+    @Override
+    public void exportInsuranceStatistics(List<InsuranceStatistics> insuranceStatisticsList) {
+        String fileName = "C:\\Users\\Cloud\\Desktop\\test\\" + System.currentTimeMillis() + ".xlsx";
+        // 将数据库数据装填到excel包装类
+        List<InsuranceStatisticModel> insuranceStatisticModels = insuranceStatisticsList.stream().map(insuranceStatisticsItem -> {
+            InsuranceStatisticModel insuranceStatisticModel = new InsuranceStatisticModel();
+            insuranceStatisticModel.setSubmitTime(new Date());
+            insuranceStatisticModel.setDomainName(insuranceStatisticsItem.getPrefecture()+"");
+            insuranceStatisticModel.setCount(insuranceStatisticsItem.getCount());
+            insuranceStatisticModel.setJanuary(insuranceStatisticsItem.getJanuary());
+            insuranceStatisticModel.setFebruary(insuranceStatisticsItem.getFebruary());
+            insuranceStatisticModel.setMarch((insuranceStatisticsItem.getMarch()));
+            insuranceStatisticModel.setApril(insuranceStatisticsItem.getApril());
+            insuranceStatisticModel.setMay(insuranceStatisticsItem.getMay());
+            insuranceStatisticModel.setJune(insuranceStatisticsItem.getJune());
+            insuranceStatisticModel.setJuly(insuranceStatisticsItem.getJuly());
+            insuranceStatisticModel.setAugust(insuranceStatisticsItem.getAugust());
+            insuranceStatisticModel.setSeptember(insuranceStatisticsItem.getSeptember());
+            insuranceStatisticModel.setOctober(insuranceStatisticsItem.getOctober());
+            insuranceStatisticModel.setNovember(insuranceStatisticsItem.getNovember());
+            insuranceStatisticModel.setDecember(insuranceStatisticsItem.getDecember());
+            insuranceStatisticModel.setTotalMoney(insuranceStatisticsItem.getTotalMoney());
+            return insuranceStatisticModel;
+        }).collect(Collectors.toList());
+
+        EasyExcel.write(fileName, InsuranceStatisticModel.class).sheet("Sheet 1").doWrite(insuranceStatisticModels);
     }
 
 

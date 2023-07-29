@@ -1,6 +1,7 @@
 package cn.edu.guet.insuranceandmove.service.impl;
 
 import cn.edu.guet.insuranceandmove.bean.*;
+import cn.edu.guet.insuranceandmove.common.CalculateUtil;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -104,7 +105,6 @@ public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper,
     public ResponseData getRelocationById(Long id) {
 
         List<RelocationList> relocationListList = relocationListMapper.getRelocationById(id);
-        System.out.println(relocationListList);
         return ResponseData.ok(relocationListList);
     }
 
@@ -149,6 +149,35 @@ public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper,
         EasyExcel.write(fileName, RelocationModel.class).sheet("Sheet 1").doWrite(relocationModels);
     }
 
+    @Override
+    public void exportRelocationStatistics(List<RelocationStatistics> relocationStatisticsList) {
+        String fileName = "C:\\Users\\Cloud\\Desktop\\test\\" + System.currentTimeMillis() + ".xlsx";
+        // 将数据库数据装填到excel包装类
+        List<RelocationStatisticsModel> relocationStatisticsModels = relocationStatisticsList.stream().map(relocationStatistics -> {
+            System.out.println(relocationStatistics);
+            RelocationStatisticsModel relocationStatisticsModel = new RelocationStatisticsModel();
+            relocationStatisticsModel.setSubmitTime(new Date());
+            relocationStatisticsModel.setDomainName(relocationStatistics.getPrefecture()+"");
+            relocationStatisticsModel.setCount(relocationStatistics.getCount());
+            relocationStatisticsModel.setJanuary(relocationStatistics.getJanuary());
+            relocationStatisticsModel.setFebruary(relocationStatistics.getFebruary());
+            relocationStatisticsModel.setMarch((relocationStatistics.getMarch()));
+            relocationStatisticsModel.setApril(relocationStatistics.getApril());
+            relocationStatisticsModel.setMay(relocationStatistics.getMay());
+            relocationStatisticsModel.setJune(relocationStatistics.getJune());
+            relocationStatisticsModel.setJuly(relocationStatistics.getJuly());
+            relocationStatisticsModel.setAugust(relocationStatistics.getAugust());
+            relocationStatisticsModel.setSeptember(relocationStatistics.getSeptember());
+            relocationStatisticsModel.setOctober(relocationStatistics.getOctober());
+            relocationStatisticsModel.setNovember(relocationStatistics.getNovember());
+            relocationStatisticsModel.setDecember(relocationStatistics.getDecember());
+            relocationStatisticsModel.setTotalMoney(relocationStatistics.getTotalMoney());
+            return relocationStatisticsModel;
+        }).collect(Collectors.toList());
+
+        EasyExcel.write(fileName, RelocationStatisticsModel.class).sheet("Sheet 1").doWrite(relocationStatisticsModels);
+    }
+
     /**
      * 迁改清单汇总统计
      *
@@ -185,82 +214,11 @@ public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper,
         // 执行查询
         List<RelocationList> relocationLists = relocationListMapper.selectList(queryWrapper);
         relocationLists.forEach(relocationList -> {
-            Integer prefecture = relocationList.getPrefecture();
-            Date occurrenceTime = relocationList.getCreateTime();
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(occurrenceTime);
-            // 获取项目发生的月份
-            int month = calendar.get(Calendar.MONTH) + 1;
-
-            switch (month) {
-                case 1:
-                    RelocationStatistics januaryStats = relocationStatisticsList.get(prefecture - 1);
-                    januaryStats.setJanuary(januaryStats.getJanuary() + 1);
-                    januaryStats.setCount(januaryStats.getCount() + 1);
-                    break;
-                case 2:
-                    RelocationStatistics februaryStats = relocationStatisticsList.get(prefecture - 1);
-                    februaryStats.setFebruary(februaryStats.getFebruary() + 1);
-                    februaryStats.setCount(februaryStats.getCount() + 1);
-                    break;
-                case 3:
-                    RelocationStatistics marchStats = relocationStatisticsList.get(prefecture - 1);
-                    marchStats.setMarch(marchStats.getMarch() + 1);
-                    marchStats.setCount(marchStats.getCount() + 1);
-                    break;
-                case 4:
-                    RelocationStatistics aprilStats = relocationStatisticsList.get(prefecture - 1);
-                    aprilStats.setApril(aprilStats.getApril() + 1);
-                    aprilStats.setCount(aprilStats.getCount() + 1);
-                    break;
-                case 5:
-                    RelocationStatistics mayStats = relocationStatisticsList.get(prefecture - 1);
-                    mayStats.setMay(mayStats.getMay() + 1);
-                    mayStats.setCount(mayStats.getCount() + 1);
-                    break;
-                case 6:
-                    RelocationStatistics juneStats = relocationStatisticsList.get(prefecture - 1);
-                    juneStats.setJune(juneStats.getJune() + 1);
-                    juneStats.setCount(juneStats.getCount() + 1);
-                    break;
-                case 7:
-                    RelocationStatistics julyStats = relocationStatisticsList.get(prefecture - 1);
-                    julyStats.setJuly(julyStats.getJuly() + 1);
-                    julyStats.setCount(julyStats.getCount() + 1);
-                    break;
-                case 8:
-                    RelocationStatistics augustStats = relocationStatisticsList.get(prefecture - 1);
-                    augustStats.setAugust(augustStats.getAugust() + 1);
-                    augustStats.setCount(augustStats.getCount() + 1);
-                    break;
-                case 9:
-                    RelocationStatistics septemberStats = relocationStatisticsList.get(prefecture - 1);
-                    septemberStats.setSeptember(septemberStats.getSeptember() + 1);
-                    septemberStats.setCount(septemberStats.getCount() + 1);
-                    break;
-                case 10:
-                    RelocationStatistics octoberStats = relocationStatisticsList.get(prefecture - 1);
-                    octoberStats.setOctober(octoberStats.getOctober() + 1);
-                    octoberStats.setCount(octoberStats.getCount() + 1);
-                    break;
-                case 11:
-                    RelocationStatistics novemberStats = relocationStatisticsList.get(prefecture - 1);
-                    novemberStats.setNovember(novemberStats.getNovember() + 1);
-                    novemberStats.setCount(novemberStats.getCount() + 1);
-                    break;
-                case 12:
-                    RelocationStatistics decemberStats = relocationStatisticsList.get(prefecture - 1);
-                    decemberStats.setDecember(decemberStats.getDecember() + 1);
-                    decemberStats.setCount(decemberStats.getCount() + 1);
-                    break;
-                default:
-                    break;
-            }
+            CalculateUtil.updateRelocationStatisticsList(relocationStatisticsList,relocationList);
         });
 
-        System.out.println(relocationStatisticsList);
-
+        RelocationStatistics totalStatistics = CalculateUtil.calculateRelocationCounts(relocationStatisticsList);
+        relocationStatisticsList.add(totalStatistics);
 
         return relocationStatisticsList;
     }

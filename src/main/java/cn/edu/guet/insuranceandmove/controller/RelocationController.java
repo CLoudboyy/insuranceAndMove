@@ -1,9 +1,6 @@
 package cn.edu.guet.insuranceandmove.controller;
 
-import cn.edu.guet.insuranceandmove.bean.InsuranceList;
-import cn.edu.guet.insuranceandmove.bean.RelocationList;
-import cn.edu.guet.insuranceandmove.bean.RelocationListQueryDTO;
-import cn.edu.guet.insuranceandmove.bean.RelocationStatisticsVO;
+import cn.edu.guet.insuranceandmove.bean.*;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 import cn.edu.guet.insuranceandmove.service.RelocationListService;
 ;
@@ -97,6 +94,14 @@ public class RelocationController {
     @PostMapping("/exportRelocationListExcel")
     public ResponseData exportRelocationListExcel(@RequestBody List<Integer> idsList){
         relocationListService.exportRelocationListExcel(idsList);
+        return ResponseData.ok();
+    }
+
+    @PostMapping("/exportRelocationStatistics")
+    public ResponseData exportRelocationStatistics(@RequestBody RelocationStatisticsVO relocationStatisticsVO){
+        List<RelocationStatistics> relocationStatisticsList =
+                relocationListService.selectRelocationStatisticsByYear(relocationStatisticsVO.getYear());
+        relocationListService.exportRelocationStatistics(relocationStatisticsList);
         return ResponseData.ok();
     }
 
