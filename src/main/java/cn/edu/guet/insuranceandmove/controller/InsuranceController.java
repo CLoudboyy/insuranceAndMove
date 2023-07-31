@@ -6,7 +6,6 @@ import cn.edu.guet.insuranceandmove.bean.InsuranceStatistics;
 import cn.edu.guet.insuranceandmove.bean.InsuranceStatisticsVO;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
-
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.web.bind.annotation.*;
 import cn.edu.guet.insuranceandmove.service.UserService;
@@ -17,10 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

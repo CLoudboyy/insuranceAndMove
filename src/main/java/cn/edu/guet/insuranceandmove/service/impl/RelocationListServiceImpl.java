@@ -31,6 +31,9 @@ import java.util.stream.Collectors;
 @Service
 public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper, RelocationList>
         implements RelocationListService {
+
+    private static final int MAX_PREFECTURES = 14;
+
     @Autowired
     private RelocationListMapper relocationListMapper;
 
@@ -187,7 +190,7 @@ public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper,
     @Override
     public List<RelocationStatistics> selectRelocationStatisticsByYear(int year) {
         List<RelocationStatistics> relocationStatisticsList = new ArrayList<>();
-        for (int i = 1; i <= 14; i++) {
+        for (int i = 1; i <= MAX_PREFECTURES; i++) {
             RelocationStatistics relocationStatistics = new RelocationStatistics();
             relocationStatistics.setPrefecture(i);
             relocationStatistics.setCount(0);
