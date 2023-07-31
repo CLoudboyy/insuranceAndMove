@@ -186,6 +186,15 @@ public class InsuranceModel implements Serializable {
     @ExcelProperty(value = "备注")
     private String insuranceRemark;
 
+    /**
+     * 数据更新时间
+     * @return
+     */
+    @ExcelProperty(value = "数据更新时间")
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
+    @ColumnWidth(20)
+    private Date updateTime;
+
 
     public String getDomainName(){
         if (this.domainName == null){

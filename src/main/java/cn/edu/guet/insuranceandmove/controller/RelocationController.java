@@ -97,6 +97,11 @@ public class RelocationController {
         return ResponseData.ok();
     }
 
+    /**
+     * 导出迁改汇总统计清单
+     * @param relocationStatisticsVO
+     * @return
+     */
     @PostMapping("/exportRelocationStatistics")
     public ResponseData exportRelocationStatistics(@RequestBody RelocationStatisticsVO relocationStatisticsVO){
         List<RelocationStatistics> relocationStatisticsList =

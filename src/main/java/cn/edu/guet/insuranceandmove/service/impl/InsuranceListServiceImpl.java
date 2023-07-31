@@ -1,21 +1,27 @@
 package cn.edu.guet.insuranceandmove.service.impl;
 
 import cn.edu.guet.insuranceandmove.bean.*;
-
 import cn.edu.guet.insuranceandmove.common.CalculateUtil;
 import cn.edu.guet.insuranceandmove.common.ResponseData;
-
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.edu.guet.insuranceandmove.service.InsuranceListService;
 import cn.edu.guet.insuranceandmove.mapper.InsuranceListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 /**
  * @author Cloud
@@ -25,6 +31,8 @@ import java.util.stream.Collectors;
 @Service
 public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, InsuranceList>
         implements InsuranceListService {
+
+    private static final int MAX_PREFECTURES = 14;
 
     @Autowired
     private InsuranceListMapper insuranceListMapper;
@@ -95,7 +103,7 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
     @Override
     public List<InsuranceStatistics> selectInsuranceStatisticsByYear(int year) {
         List<InsuranceStatistics> insuranceStatisticsList = new ArrayList<>();
-        for (int i = 1; i <= 14; i++) {
+        for (int i = 1; i <= MAX_PREFECTURES; i++) {
             InsuranceStatistics insuranceStatistics = new InsuranceStatistics();
             insuranceStatistics.setPrefecture(i);
             insuranceStatistics.setCount(0);
@@ -171,6 +179,7 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
             insuranceModel.setPayStatusRemark(insuranceItem.getInsuranceRemarks());
             insuranceModel.setCompletionConfirmed(insuranceItem.getCaseCompletionConfirm() + "");
             insuranceModel.setInsuranceRemark(insuranceItem.getInsuranceRemarks());
+            insuranceModel.setUpdateTime(insuranceItem.getUpdateTime());
 
             return insuranceModel;
         }).collect(Collectors.toList());
@@ -178,6 +187,10 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         EasyExcel.write(fileName, InsuranceModel.class).sheet("Sheet 1").doWrite(insuranceModels);
     }
 
+    /**
+     *
+     * @param insuranceStatisticsList
+     */
     @Override
     public void exportInsuranceStatistics(List<InsuranceStatistics> insuranceStatisticsList) {
         String fileName = "C:\\Users\\Cloud\\Desktop\\test\\" + System.currentTimeMillis() + ".xlsx";
@@ -204,8 +217,8 @@ public class InsuranceListServiceImpl extends ServiceImpl<InsuranceListMapper, I
         }).collect(Collectors.toList());
 
         EasyExcel.write(fileName, InsuranceStatisticModel.class).sheet("Sheet 1").doWrite(insuranceStatisticModels);
-    }
 
+    }
 
 }
 
