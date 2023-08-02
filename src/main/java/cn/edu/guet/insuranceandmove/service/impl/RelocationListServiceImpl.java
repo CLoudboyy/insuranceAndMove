@@ -33,6 +33,7 @@ public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper,
         implements RelocationListService {
 
     private static final int MAX_PREFECTURES = 14;
+    private static final String ZERO_DISCUSSSCHEDULE = "0";
 
     @Autowired
     private RelocationListMapper relocationListMapper;
@@ -55,13 +56,19 @@ public class RelocationListServiceImpl extends ServiceImpl<RelocationListMapper,
             queryWrapper.eq("prefecture", relocationDTO.getPrefecture());
         }
         if (relocationDTO.getCounty() != null && relocationDTO.getCounty() != 0) {
-            queryWrapper.eq("county", relocationDTO.getPrefecture());
+            queryWrapper.eq("county", relocationDTO.getCounty());
         }
         if (!StringUtils.isBlank(relocationDTO.getModifyProjectName())) {
             queryWrapper.like("modify_project_name", relocationDTO.getModifyProjectName());
         }
         if (!CollectionUtils.isEmpty(relocationDTO.getActualCompletionTime())) {
             queryWrapper.between("actual_completion_time", relocationDTO.getActualCompletionTime().get(0), relocationDTO.getActualCompletionTime().get(1));
+        }
+        if(relocationDTO.getDiscussSchedule() != null && !ZERO_DISCUSSSCHEDULE.equals(relocationDTO.getDiscussSchedule())){
+            queryWrapper.eq("discuss_schedule", relocationDTO.getDiscussSchedule());
+        }
+        if (relocationDTO.getCompensationSchedule() != null && relocationDTO.getCompensationSchedule() != 0){
+            queryWrapper.eq("compensation_schedule", relocationDTO.getCompensationSchedule());
         }
 
         return relocationListMapper.selectPage(page, queryWrapper);

@@ -8,6 +8,8 @@ public class RelocationListQueryDTO extends Page {
     private Integer county;
     private String modifyProjectName;
     private List<Timestamp> actualCompletionTime;
+    private String discussSchedule;
+    private Integer compensationSchedule;
 
     public Integer getPrefecture() {
         return prefecture;
@@ -41,6 +43,22 @@ public class RelocationListQueryDTO extends Page {
         this.actualCompletionTime = actualCompletionTime;
     }
 
+    public String getDiscussSchedule() {
+        return discussSchedule;
+    }
+
+    public void setDiscussSchedule(String discussSchedule) {
+        this.discussSchedule = discussSchedule;
+    }
+
+    public Integer getCompensationSchedule() {
+        return compensationSchedule;
+    }
+
+    public void setCompensationSchedule(Integer compensationSchedule) {
+        this.compensationSchedule = compensationSchedule;
+    }
+
     @Override
     public String toString() {
         return "RelocationListQueryDTO{" +
@@ -48,6 +66,8 @@ public class RelocationListQueryDTO extends Page {
                 ", county=" + county +
                 ", modifyProjectName='" + modifyProjectName + '\'' +
                 ", actualCompletionTime=" + actualCompletionTime +
+                ", discussSchedule='" + discussSchedule + '\'' +
+                ", compensationSchedule=" + compensationSchedule +
                 '}';
     }
 }
